@@ -10,6 +10,10 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
+
 /**
  * Created by 羊荣毅_L on 2016/12/4.
  */
@@ -53,7 +57,14 @@ public class CustomTitleView extends View {
         mPaint.setTextSize(mtitletextsize);
         mPaint.setColor(mtitletextcolor);
         mBound=new Rect();
-        mPaint.getTextBounds(mtitletext,0,mtitletext.length(),mBound);
+        mPaint.getTextBounds(mtitletext, 0, mtitletext.length(), mBound);
+        this.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mtitletext = randomText();
+                postInvalidate();
+            }
+        });
     }
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)
@@ -87,23 +98,34 @@ public class CustomTitleView extends View {
             int desired = (int) (getPaddingTop() + textHeight + getPaddingBottom());
             height = desired;
         }
-
-
-
         setMeasuredDimension(width, height);
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(final Canvas canvas) {
         super.onDraw(canvas);
-
         mPaint.setColor(Color.YELLOW);
         canvas.drawRect(0, 0, getMeasuredWidth(), getMeasuredHeight(), mPaint);
-
         mPaint.setColor(mtitletextcolor);
         canvas.drawText(mtitletext, getWidth() / 2 - mBound.width() / 2, getHeight() / 2 + mBound.height() / 2, mPaint);
-    }
 
+    }
+    private String randomText()
+    {
+        Random random = new Random();
+        Set<Integer> set = new HashSet<Integer>();
+        while (set.size() < 4)
+        {
+            int randomInt = random.nextInt(10);
+            set.add(randomInt);
+        }
+        StringBuffer sb = new StringBuffer();
+        for (Integer i : set)
+        {
+            sb.append("" + i);
+        }
+         return sb.toString();
+    }
 }
 
 
